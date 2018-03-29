@@ -42,10 +42,21 @@ class Minesweeper {
     for (int i = 0; i < map.length; i++) {
       for (int j = 0; j < map[i].length; j++) {
         if (map[i][j] != -1) {
-          if (i < map.length - 1 && map[i + 1][j] == -1) numberOfBombs++; // down
-          if (i > 0 && map[i - 1][j] == 8) numberOfBombs++; // up
-          if (j < map[i].length - 1 && map[i][j + 1] == -1) numberOfBombs++; // right
-          if (j > 0 && map[i][j - 1] == -1) numberOfBombs++; // left
+          
+          /* Left & Right */
+          if (j < map[i].length - 1 && map[i][j + 1] == -1) numberOfBombs++;
+          if (j > 0 && map[i][j - 1] == -1) numberOfBombs++;
+          
+          /* Up & Diagonal Right and Left */
+          if (i > 0 && map[i - 1][j] == -1) numberOfBombs++;
+          if (i > 0 && j < map[i].length - 1 && map[i - 1][j + 1] == -1) numberOfBombs++; 
+          if (i > 0 && j > 0 && map[i - 1][j - 1] == -1) numberOfBombs++; 
+          
+          /* Down & Diagonal Right and Left */
+          if (i < map.length - 1 && map[i + 1][j] == -1) numberOfBombs++;
+          if (i < map.length - 1 && j < map[i].length - 1 && map[i + 1][j + 1] == -1) numberOfBombs++;
+          if (i < map.length - 1 && j > 0 && map[i + 1][j - 1] == -1) numberOfBombs++; 
+          
           map[i][j] = numberOfBombs;
           numberOfBombs = 0;
         }
@@ -69,7 +80,5 @@ class Main {
     board.printMap();
   }
 }
-
-
 
 

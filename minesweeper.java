@@ -2,16 +2,22 @@ import java.util.Scanner;
 
 class Minesweeper {
   private int[][] map;
+  public int rows;
+  public int cols;
   
   public void Minesweeper() {
     this.map = map;
+    this.rows = rows;
+    this.cols = cols;
   }
   
   public void generateMap(int m, int n) {
     map = new int[m][n];
+    rows = map.length;
+    cols = map[0].length;
   }
 
-  public void printMap() {
+  public void revealMap(int m, int n) {
     for(int i = 0; i < map.length; i++) {
       System.out.print("| ");
       for (int j = 0; j < map[i].length; j++) {
@@ -115,32 +121,42 @@ class Main {
     }
     
     game.numberOfAdjacentBombs();
-    game.printMap();
   }
   
-  public static boolean gamePlay(Minesweeper game) {
-    Scanner reader = new Scanner(System.in);
+  public static boolean playGame(Minesweeper game) {
+    Scanner selection = new Scanner(System.in);
     System.out.println("Enter row:");
-    int m = reader.nextInt();
-    System.out.println("Enter column:");
-    int n = reader.nextInt();
-
-    if (game.gameOver(m, n)) {
-      return false;
+    int m = selection.nextInt();
+    
+    while (m < 0 || m > game.rows - 1) {
+      System.out.println("Invalid row number. Try again.");
+      m = selection.nextInt();
     }
     
-    return true;
+    System.out.println("Enter column:");
+    int n = selection.nextInt();
+    
+    while (n < 0 || n > game.cols - 1) {
+      System.out.println("Invalid column number. Try again.");
+      n = selection.nextInt();
+    }
+
+    if (!game.gameOver(m, n)) {
+      game.revealMap(m, n);
+      return true;
+    }
+    
+    return false;
   }
   
   public static void main(String[] args) {
     Minesweeper newGame = new Minesweeper();
     startGame(newGame);
     
-    while (gamePlay(newGame)) {
-      newGame.printMap();
+    while (playGame(newGame)) {
+      // continue gameplay until bomb is selected
     }
     
     System.out.println("GAME OVER!");
   }
 }
-

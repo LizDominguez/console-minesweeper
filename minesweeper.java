@@ -1,3 +1,5 @@
+import java.util.Scanner;
+
 class Minesweeper {
   private int[][] map;
   
@@ -5,8 +7,8 @@ class Minesweeper {
     this.map = map;
   }
   
-  public void generateMap(int size) {
-    map = new int[size][size];
+  public void generateMap(int m, int n) {
+    map = new int[m][n];
   }
 
   public void printMap() {
@@ -64,21 +66,81 @@ class Minesweeper {
     }
   }
   
+  public boolean gameOver(int m, int n) {
+    if (map[m][n] == -1) return true;
+    return false;
+  }
+  
 }
 
 
 class Main {
   
+
+  public static void startGame(Minesweeper game) {
+    System.out.println("Welcome to Minesweeper!");
+    System.out.println();
+    Scanner level = new Scanner(System.in);
+    
+    System.out.println("Select difficulty:");
+    System.out.println("1. Beginner (8x8 with 10 mines)");
+    System.out.println("2. Intermediate (16x16 with 40 mines)");
+    System.out.println("3. Expert (16x30 with 99 mines)");
+    System.out.println();
+    
+    int difficulty = level.nextInt();
+    
+    while (difficulty < 1 || difficulty > 3) {
+      System.out.println("Invalid option. Please type 1, 2, or 3.");
+      difficulty = level.nextInt();
+    }
+    
+    switch (difficulty) {
+      case 1: 
+        game.generateMap(8, 8);
+        game.placeBombs(10);
+        break;
+              
+      case 2: 
+        game.generateMap(16, 16);
+        game.placeBombs(40);
+        break;
+              
+      case 3: 
+        game.generateMap(16, 30);
+        game.placeBombs(99);
+        break;
+        
+      default: break;
+    }
+    
+    game.numberOfAdjacentBombs();
+    game.printMap();
+  }
+  
+  public static boolean gamePlay(Minesweeper game) {
+    Scanner reader = new Scanner(System.in);
+    System.out.println("Enter row:");
+    int m = reader.nextInt();
+    System.out.println("Enter column:");
+    int n = reader.nextInt();
+
+    if (game.gameOver(m, n)) {
+      return false;
+    }
+    
+    return true;
+  }
+  
   public static void main(String[] args) {
-    Minesweeper board = new Minesweeper();
-    board.generateMap(5);
-    System.out.println("With Bombs:");
-    board.placeBombs(5);
-    board.printMap();
-    System.out.println("Clues:");
-    board.numberOfAdjacentBombs();
-    board.printMap();
+    Minesweeper newGame = new Minesweeper();
+    startGame(newGame);
+    
+    while (gamePlay(newGame)) {
+      newGame.printMap();
+    }
+    
+    System.out.println("GAME OVER!");
   }
 }
-
 

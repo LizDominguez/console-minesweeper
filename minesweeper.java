@@ -2,17 +2,20 @@ import java.util.Scanner;
 
 class Minesweeper {
   private int[][] map;
+  private int[][] progressMap;
   public int rows;
   public int cols;
   
   public void Minesweeper() {
     this.map = map;
+    this.progressMap = progressMap;
     this.rows = rows;
     this.cols = cols;
   }
   
   public void generateMap(int m, int n) {
     map = new int[m][n];
+    progressMap = new int[m][n];
     rows = map.length;
     cols = map[0].length;
   }
@@ -22,24 +25,51 @@ class Minesweeper {
       System.out.print("| ");
       for (int j = 0; j < map[i].length; j++) {
         System.out.print("  | ");
+        progressMap[i][j] = -1; // prepopulate progress map
       }
       System.out.println();
     }
   }
 
   public void revealMap(int m, int n, boolean isgameOver) {
+    
+    clearArea(m, n);
+    
     for(int i = 0; i < map.length; i++) {
       System.out.print("| ");
       for (int j = 0; j < map[i].length; j++) {
-        if (isgameOver) {
+        if (isgameOver) { // if game over, reaveal full map
           if (map[i][j] == -1) System.out.print("* | ");
           else System.out.print(map[i][j] + " | ");
+        } else { // otherwise print progress map
+          if (progressMap[i][j] != -1) System.out.print(progressMap[i][j] + " | ");
+          else System.out.print("  | ");
         }
-        else if (i == m && j == n) System.out.print(map[i][j] + " | ");
-        else System.out.print("  | ");
       }
       System.out.println();
     }
+  }
+  
+  public void clearArea(int m, int n) {
+    if (m < 0 || n < 0 || m > map.length - 1 || n > map[m].length - 1 || map[m][n] == -1 || progressMap[m][n] > -1) return;
+    
+    progressMap[m][n] = map[m][n];
+    
+    if (map[m][n] > 0) return; 
+    
+    /* Left & Right */
+    clearArea(m, n - 1);
+    clearArea(m, n + 1);
+            
+    /* Up & Down */
+    clearArea(m + 1, n);
+    clearArea(m - 1, n);
+            
+    /* Diagonal */
+    clearArea(m - 1, n + 1); 
+    clearArea(m - 1, n - 1);
+    clearArea(m + 1, n + 1);
+    clearArea(m + 1, n - 1);
   }
   
   public void placeBombs(int number) {

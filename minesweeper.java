@@ -116,8 +116,25 @@ class Minesweeper {
     }
   }
   
-  public boolean gameOver(int m, int n) {
-    if (map[m][n] == -1) return true;
+  public boolean gameOver(int m, int n, int numBombs) {
+    if (map[m][n] == -1) {
+      System.out.println("GAME OVER!");
+      return true;
+    } 
+    
+    for (int i = 0; i < progressMap.length; i++) {
+      for (int j = 0; j < progressMap[i].length; j++) {
+        if (progressMap[i][j] == -1) {
+          numBombs--;
+        }
+      }
+    }
+    
+    if (numBombs == 0) {
+      System.out.println("YOU WIN!!");
+      return true;
+    } 
+    
     return false;
   }
   
@@ -127,7 +144,7 @@ class Minesweeper {
 class Main {
   
 
-  public static void startGame(Minesweeper game) {
+  public static int startGame(Minesweeper game) {
     System.out.println("Welcome to Minesweeper!");
     System.out.println();
     Scanner level = new Scanner(System.in);
@@ -145,30 +162,34 @@ class Main {
       difficulty = level.nextInt();
     }
     
+    int bombs = 0;
+    
     switch (difficulty) {
       case 1: 
         game.generateMap(8, 8);
-        game.placeBombs(10);
+        bombs = 10;
         break;
               
       case 2: 
         game.generateMap(16, 16);
-        game.placeBombs(40);
+        bombs = 40;
         break;
               
       case 3: 
         game.generateMap(16, 30);
-        game.placeBombs(99);
+        bombs = 99;
         break;
         
       default: break;
     }
     
+    game.placeBombs(bombs);
     game.numberOfAdjacentBombs();
     game.printEmptyMap();
+    return bombs;
   }
   
-  public static boolean playGame(Minesweeper game) {
+  public static boolean playGame(Minesweeper game, int bombs) {
     Scanner selection = new Scanner(System.in);
     System.out.println("Enter row:");
     int m = selection.nextInt();
@@ -186,7 +207,7 @@ class Main {
       n = selection.nextInt();
     }
 
-    if (!game.gameOver(m, n)) {
+    if (!game.gameOver(m, n, bombs)) {
       game.revealMap(m, n, false);
       return true;
     }
@@ -197,12 +218,10 @@ class Main {
   
   public static void main(String[] args) {
     Minesweeper newGame = new Minesweeper();
-    startGame(newGame);
+    int bombs = startGame(newGame);
     
-    while (playGame(newGame)) {
+    while (playGame(newGame, bombs)) {
       // continue gameplay until bomb is selected
     }
-    
-    System.out.println("GAME OVER!");
   }
 }

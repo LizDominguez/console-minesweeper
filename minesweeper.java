@@ -221,7 +221,7 @@ class Main {
     int bombs = startGame(newGame);
     
     while (playGame(newGame, bombs)) {
-      // continue gameplay until bomb is selected
+      // continue gameplay until bomb is selected or player wins
     }
   }
 }

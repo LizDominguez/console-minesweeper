@@ -16,13 +16,27 @@ class Minesweeper {
     rows = map.length;
     cols = map[0].length;
   }
-
-  public void revealMap(int m, int n) {
+  
+  public void printEmptyMap() {
     for(int i = 0; i < map.length; i++) {
       System.out.print("| ");
       for (int j = 0; j < map[i].length; j++) {
-        if (map[i][j] == -1) System.out.print("* | ");
-        else System.out.print(map[i][j] + " | ");
+        System.out.print("  | ");
+      }
+      System.out.println();
+    }
+  }
+
+  public void revealMap(int m, int n, boolean isgameOver) {
+    for(int i = 0; i < map.length; i++) {
+      System.out.print("| ");
+      for (int j = 0; j < map[i].length; j++) {
+        if (isgameOver) {
+          if (map[i][j] == -1) System.out.print("* | ");
+          else System.out.print(map[i][j] + " | ");
+        }
+        else if (i == m && j == n) System.out.print(map[i][j] + " | ");
+        else System.out.print("  | ");
       }
       System.out.println();
     }
@@ -121,6 +135,7 @@ class Main {
     }
     
     game.numberOfAdjacentBombs();
+    game.printEmptyMap();
   }
   
   public static boolean playGame(Minesweeper game) {
@@ -142,10 +157,11 @@ class Main {
     }
 
     if (!game.gameOver(m, n)) {
-      game.revealMap(m, n);
+      game.revealMap(m, n, false);
       return true;
     }
     
+    game.revealMap(m, n, true);
     return false;
   }
   
